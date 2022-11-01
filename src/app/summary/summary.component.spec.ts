@@ -1,23 +1,30 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ShoppingCartService } from '../services/shopping-cart.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Component({
-  selector: 'app-summary',
-  templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class SummaryComponent implements OnInit {
+import { SummaryComponent } from './summary.component';
 
-  count$: Observable<number> | undefined;
+describe('SummaryComponent', () => {
+  let component: SummaryComponent;
+  let fixture: ComponentFixture<SummaryComponent>;
 
-  constructor(
-    private shoppingCartService: ShoppingCartService
-  ) { }
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ SummaryComponent ],
+      imports: [ HttpClientModule, ],
+    })
+    .compileComponents();
+  });
 
-  ngOnInit() {
-    this.count$ = this.shoppingCartService.getCount();
-  }
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SummaryComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+  it('should render count', () => {
+    expect(component.count).toBeDefined();
+  });
+});

@@ -9,6 +9,8 @@ import { ShoppingCartService } from '../services/shopping-cart.service';
 })
 export class SubtotalComponent implements OnInit {
 
+  count : any;
+  subTotal : any;
   count$: Observable<number> | undefined;
   subTotal$: Observable<number> | undefined;
 
@@ -17,8 +19,17 @@ export class SubtotalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.subTotal$ = this.shoppingCartService.getSubTotal();
-    this.count$ = this.shoppingCartService.getCount();
+    // this.subTotal$ = this.shoppingCartService.getSubTotal();
+    // this.count$ = this.shoppingCartService.getCount();
+    this.shoppingCartService.count.subscribe(data=>{
+      this.count= data;
+     
+    })
+    this.shoppingCartService.total.subscribe(data=>{
+      this.subTotal= data;
+     
+    })
+   
   }
 
 }

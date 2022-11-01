@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Item, ShoppingCart } from '../models';
 import { map, pluck } from 'rxjs/operators';
 
@@ -10,6 +10,8 @@ import { map, pluck } from 'rxjs/operators';
 export class ShoppingCartService {
 
   private shoppingCart$: BehaviorSubject<ShoppingCart>;
+  public count = new BehaviorSubject<any>(0);
+  public total = new BehaviorSubject<any>(0);
 
   constructor(
     private httpClient: HttpClient
@@ -33,6 +35,8 @@ export class ShoppingCartService {
 
   private setShoppingCart(shoppingCart: ShoppingCart) {
     this.shoppingCart$.next(shoppingCart);
+    this.getCount().subscribe(data=>{this.count.next(data)});
+    this.getSubTotal().subscribe(data=>{this.total.next(data)});
   }
 
   getItems(): Observable<Item[]> {
@@ -47,10 +51,26 @@ export class ShoppingCartService {
         const subTotal = shoppingCart?.items
           .map((item) => item.quantity * item.sku.price)
           .reduce((p, c) => p + c, 0);
+         
         return subTotal;
       })
     );
   }
+
+  // getCount(): any {
+  //   this.count.next(2);
+  //   console.log(this.shoppingCart$)
+  //    this.shoppingCart$.pipe(
+  //     map((shoppingCart) => {
+  //       const count = shoppingCart.items
+  //         .map((item) => item.quantity)
+  //         .reduce((p, c) => p + c, 0);
+          
+  //         console.log(count)
+  //      //  count;
+  //     })
+  //   );
+  // }
 
   getCount(): Observable<number> {
     return this.shoppingCart$.pipe(
